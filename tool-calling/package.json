@@ -1,0 +1,16 @@
+{
+  "name": "tool-calling",
+  "version": "1.0.0",
+  "description": "Tool Calling",
+  "main": "basics.js",
+  "type": "module",
+  "scripts": {},
+  "keywords": [],
+  "author": "kostasx",
+  "license": "ISC",
+  "dependencies": {
+    "@langchain/core": "^0.3.17",
+    "@langchain/ollama": "^0.1.2",
+    "zod": "^3.23.8"
+  }
+}
