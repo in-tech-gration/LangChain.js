@@ -71,7 +71,7 @@ const toolsByName = {
 for (const toolCall of aiMessage.tool_calls) {
   const selectedTool = toolsByName[toolCall.name];
   const toolMessage = await selectedTool.invoke(toolCall);
-  // console.log({ toolMessage });
+  console.log(`Calling the ${toolCall.name} tool.`);
   messages.push(toolMessage);
 }
 
