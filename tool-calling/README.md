@@ -48,3 +48,4 @@
   - [LangChain Concepts: Agents](https://js.langchain.com/docs/concepts/agents)
   - [LangChain Concepts: Messages](https://js.langchain.com/docs/concepts/messages/)
   - [LangChain Concepts: Tool Calling](https://js.langchain.com/docs/concepts/tool_calling)
+  - [LangChain: Ollama Chat Model](https://js.langchain.com/docs/integrations/chat/ollama)

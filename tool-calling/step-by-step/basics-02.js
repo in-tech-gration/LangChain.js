@@ -9,7 +9,7 @@ const llm = new ChatOllama({
   temperature: 0 
 });
 
-// (1) Key Concepts: Define our functions and  use the `tool` helpers function to create a tool. A tool is an association between a function and its schema.
+// (1) Key Concepts: Define our functions and use the `tool` helpers function to create a tool. A tool is an association between a function and its schema.
 const add      = async ({ a, b }) => a + b;
 const multiply = async ({ a, b }) => a * b;
 
