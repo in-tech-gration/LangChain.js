@@ -42,6 +42,17 @@
     - Dependencies: 
       - `npm install zod @langchain/core @langchain/ollama`
     - Code: [basics-01.js](./step-by-step/basics-01.js)
+  - **Step 2:**
+    - Code: [basics-02.js](./step-by-step/basics-02.js)
+  - **Step 3:**
+    - Code: [basics-03.js](./step-by-step/basics-03.js)
+  - **Step 4:**
+    - Code: [basics-04.js](./step-by-step/basics-04.js)
+
+  - **Extras (5): Querying a Database:**
+    - Dependencies: 
+      - `npm install sqlite3`
+    - Code: [extras-05.js](./step-by-step/extras-05.js)
 
 ## REFERENCES & RESOURCES
 
@@ -49,3 +60,5 @@
   - [LangChain Concepts: Messages](https://js.langchain.com/docs/concepts/messages/)
   - [LangChain Concepts: Tool Calling](https://js.langchain.com/docs/concepts/tool_calling)
   - [LangChain: Ollama Chat Model](https://js.langchain.com/docs/integrations/chat/ollama)
+  - [LangChain: Tool Calling Best Practices](https://js.langchain.com/docs/concepts/tool_calling#best-practices)
+  - [AI Agents in production](https://www.langchain.com/breakoutagents)
