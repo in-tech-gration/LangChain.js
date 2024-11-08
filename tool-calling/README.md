@@ -62,3 +62,9 @@
   - [LangChain: Ollama Chat Model](https://js.langchain.com/docs/integrations/chat/ollama)
   - [LangChain: Tool Calling Best Practices](https://js.langchain.com/docs/concepts/tool_calling#best-practices)
   - [AI Agents in production](https://www.langchain.com/breakoutagents)
+
+## CHANGELOG
+
+- [x] Create a basic step-by-step Tool Calling process
+- [ ] Create an agent that does arithmetic operations and checks for Cryptocurrency prices
+- [ ] Create an agent that can make calls to a SQLite Music database
