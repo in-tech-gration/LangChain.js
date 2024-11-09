@@ -13,6 +13,8 @@
   - Check whether Ollama is installed: `ollama --version`
   - Check whether the required models are available: `ollama list`
 
+  - Check out [this video](https://www.youtube.com/watch?v=0n3D2nNq7AE) to learn how to install Ollama on your system.
+
 ## CONCEPTS
 
   Most `Large Language Models` cannot take actions on their own. They can receive text or other media as input (e.g. images, PDFs, audio, etc.) and respond, usually, in the form of natural language (either text or speech).
