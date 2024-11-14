@@ -36,6 +36,9 @@ const multiplyTool = tool(
     name: "multiply",
     schema: multiplyInputSchema,
     description: "Multiplies a and b.",
+    // NOTE: For better results try a more descriptive tool name and a more details description:
+    // name: "multiply two numbers",
+    // description: "Multiplies numbers a and b. The arguments a and b must strictly be of type number.",
   }
 );
 
@@ -48,12 +51,12 @@ const tools = [
 const llmWithTools = llm.bindTools(tools);
 
 const messages = [ 
-  // new HumanMessage("How are you today?") // Will result in 0 tool_calls
-  // new HumanMessage("What is 11 + 49?") // Will result in 1 tool_calls (add)
-  // new HumanMessage("What is 3 * 12?") // Will result in 1 tool_calls (multiply)
-
   // Enable this SystemMessage to avoid irrelevant details in the responses, e.g. python code, etc.
   // new SystemMessage("You are a helpful assistant. Try to answer the questions provided by the user using your knowledge or use a tool to provide a response otherwise. Try to be specific with your response and not give details that were not requested by the user."),
+  // new HumanMessage("How are you today?"), // Will result in 0 tool_calls
+  // new HumanMessage("What is 11 + 49?"), // Will result in 1 tool_calls (add)
+  // new HumanMessage("What is 3 * 12?"), // Will result in 1 tool_calls (multiply)
+  // new HumanMessage("What is 3 * 222?") // Will result in 2 tool_calls (add and multiply)
   new HumanMessage("What is 3 * 12? Also, what is 11 + 49?") // Will result in 2 tool_calls (add and multiply)
 ];
 

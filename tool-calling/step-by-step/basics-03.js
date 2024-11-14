@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { tool } from "@langchain/core/tools";
 import { ChatOllama } from "@langchain/ollama";
-import { HumanMessage } from "@langchain/core/messages";
+import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 
 const llm = new ChatOllama({
   model: "llama3.1:latest", 
@@ -28,12 +28,16 @@ const addTool = tool(
     name: "add",
     schema: addInputSchema,
     description: "Adds a and b.", 
+    // NOTE: A better tool description will help the LLM produce the correct output:
+    // description: "Adds numbers a and b together. The arguments a and b are strictly numbers.", 
   }
 );
 const multiplyTool = tool(
   multiply,
   {
     name: "multiply",
+    // NOTE: A better tool name will help the LLM produce the correct output:
+    // name: "multiply two numbers",
     schema: multiplyInputSchema,
     description: "Multiplies a and b.",
   }
@@ -45,10 +49,11 @@ const tools = [
 ];
 
 // (2) 🔗 [Key Concepts: Tool Binding]: The tool needs to be connected to a model that supports tool calling. This gives the model awareness of the tool and the associated input schema required by the tool.
-const llmWithTools = llm.bindTools(tools); // bindTools only exist in Chat Models (ChatOllama)
+const llmWithTools = llm.bindTools(tools); // bindTools only exists in Chat Models (ChatOllama)
 
 // Define simple chat interaction with a single message:
 const messages = [ 
+  // new SystemMessage("You are a helpful assistant that can answer general-purpose questions and help the user with mathematical operations. If the question is not related with any math operations, just answer as usual otherwise pick one of the available tools. The arguments passed to the mathematical tools should be strictly of type number."),
   // new HumanMessage("How are you today?") // Will result in 0 tool_calls
   // new HumanMessage("What is 11 + 49?") // Will result in 1 tool_calls (add)
   // new HumanMessage("What is 3 * 12?") // Will result in 1 tool_calls (multiply)
