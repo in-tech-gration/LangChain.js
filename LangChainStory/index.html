@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+  <!-- Set global styles -->
+  <style>
+    html {
+      /* color-scheme: dark; */
+    }
+    .markmap {
+      position: relative;
+    }
+
+    .markmap>svg {
+      width: 100vw;
+      height: 100vh;
+    }
+  </style>
+
+  <!-- Wrap Markdown source in `.markmap` elements -->
+  <div class="markmap">
+    <script id="tree" type="text/template"></script>
+  </div>
+
+  <script>
+    window.markmap = {
+      autoLoader: { manual: true },
+    };
+  </script>
+  <!-- Load markmap -->
+  <script src="https://cdn.jsdelivr.net/npm/markmap-autoloader@latest"></script>
+  <script>
+    fetch("./README.md")
+    .then( res => res.text() )
+    .then( md =>{
+      const tree = document.querySelector("#tree")
+      tree.textContent = md;
+      markmap.autoLoader.renderAll();
+    })
+    .catch( error =>{
+      console.log(error)
+    });
+  </script>
+
+</body>
+
+</html>
