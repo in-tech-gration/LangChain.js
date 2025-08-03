@@ -1,6 +1,10 @@
 // Based on: https://js.langchain.com/v0.1/docs/get_started/quickstart/
 import { ChatOllama } from "@langchain/ollama";
-import { ChatPromptTemplate } from "@langchain/core/prompts";
+import {
+  ChatPromptTemplate,
+  FewShotPromptTemplate,
+  PromptTemplate,
+} from "@langchain/core/prompts";
 
 const chatModel = new ChatOllama({
   baseUrl: "http://localhost:11434", // Default value
