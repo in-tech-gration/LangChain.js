@@ -10,6 +10,12 @@ const model = new ChatOllama({
 });
 const embeddings = new OllamaEmbeddings({ model: "all-minilm:latest" });
 
+// const embeddings = new OpenAIEmbeddings({ model: "text-embedding-3-small" });
+// Pricing: https://platform.openai.com/docs/pricing#embeddings
+// text-embedding-3-small => $0.02 (08/2015)
+// text-embedding-3-large => $0.13 (08/2015)
+// text-embedding-ada-002 => $0.10 (08/2015)
+
 // Using OpenAI:
 // const model = new ChatOpenAI({ model: "gpt-4o-mini", temperature: 0 });
 // const embeddings = new OpenAIEmbeddings();
