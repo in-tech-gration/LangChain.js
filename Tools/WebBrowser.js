@@ -1,3 +1,4 @@
+// v0.3
 // https://js.langchain.com/docs/integrations/tools/webbrowser/
 import { WebBrowser } from "langchain/tools/webbrowser";
 import { ChatOpenAI, OpenAIEmbeddings } from "@langchain/openai";

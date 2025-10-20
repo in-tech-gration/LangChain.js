@@ -124,7 +124,7 @@ scoreThresholdRetriever: {
 
 }
 
-// ✅
+// ✅ MemoryVectorStore.fromTexts()
 vectorizeFromText: {
 
   break vectorizeFromText;
@@ -154,5 +154,14 @@ vectorizeFromText: {
   );
   // console.log(resultOne[0]); // typeof Document {}
   console.log(resultOne[0].pageContent); // typeof Document {}
+
+}
+
+// TODO...
+vectorRetriever: {
+
+  break vectorRetriever;
+
+  // https://js.langchain.com/docs/integrations/retrievers/self_query/memory/
 
 }
