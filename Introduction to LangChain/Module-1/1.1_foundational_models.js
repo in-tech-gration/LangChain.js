@@ -15,7 +15,14 @@ console.log(response.response_metadata);
 
 model = await initChatModel(
   "gpt-5-nano",
-  { temperature: 1.0 }
+  { 
+    // Parameters: https://docs.langchain.com/oss/javascript/langchain/models#parameters
+    temperature: 1.0, // "Controls the randomness of the model's output"
+    // Higher numbers make the responses more creative. Lower numbers make the responses more deterministic.
+    timeout: 30, // Maximum time to wait for the response before cancelling the request
+    maxTokens: 1000, // Controlling the number of tokens in the response 
+    maxRetries: 3, // Maximum number of request retries
+  }
 );
 
 response = await model.invoke("What's the capital of the Moon?");
@@ -42,6 +49,7 @@ console.log(response.content);
 
 import { createAgent } from "langchain";
 
+// Note: createAgent() is built on top of LangGraph
 const agent = createAgent({
   model: "gpt-5-nano",
 });
