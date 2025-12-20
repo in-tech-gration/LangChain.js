@@ -22,9 +22,9 @@ Converted to TypeScript...
   > "Within 30 minutes you'll be building a personal Chef that suggests recipes based on pictures of your fridge."
 
   - [x] 1.1 Foundational models
-  - [ ] 1.1 Prompting
-  - [ ] 1.2 Tools
-  - [ ] 1.2 Web Search
+  - [x] 1.1 Prompting
+  - [x] 1.2 Tools
+  - [x] 1.2 Web Search
   - [ ] 1.3 Short-Term Memory
   - [ ] 1.4 Multi-modal Messages
   - [ ] 1.5 Project: Personal Chef
