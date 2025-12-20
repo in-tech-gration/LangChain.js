@@ -25,7 +25,7 @@ Converted to TypeScript...
   - [x] 1.1 Prompting
   - [x] 1.2 Tools
   - [x] 1.2 Web Search
-  - [ ] 1.3 Short-Term Memory
+  - [x] 1.3 Short-Term Memory
   - [ ] 1.4 Multi-modal Messages
   - [ ] 1.5 Project: Personal Chef
 
