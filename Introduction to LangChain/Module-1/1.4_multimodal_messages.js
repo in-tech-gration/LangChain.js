@@ -94,7 +94,7 @@ message = new HumanMessage({
 response = await agent.invoke({
   messages: [message]
 })
-console.log(response.messages[1].content);
+console.log(response.messages[response.messages.length - 1].content);
 
 // RECORDING
 
