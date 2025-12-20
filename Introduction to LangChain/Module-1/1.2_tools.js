@@ -1,65 +1,44 @@
-// # %% [markdown]
-// # ## Tool definition
+// Based on: https://github.com/langchain-ai/lca-lc-foundations/blob/main/notebooks/module-1/1.2_tools.ipynb
 
-// # %%
-// from dotenv import load_dotenv
+// TOOL DEFINITION
 
-// load_dotenv()
+import "dotenv/config.js";
+import { createAgent, tool, HumanMessage } from "langchain";
+import * as z from "zod";
 
-// # %%
-// from langchain.tools import tool
+const squareRoot = tool(
+  ({ x }) => Math.sqrt(x),
+  {
+    name: "square_root",
+    description: "Calculate the square root of a number",
+    schema: z.object({
+      x: z.number().describe("The number to calculate the square root from."),
+    }),
+  }
+);
 
-// @tool
-// def square_root(x: float) -> float:
-//     """Calculate the square root of a number"""
-//     return x ** 0.5
+const result = await squareRoot.invoke({ x: 467 });
+// console.log({ result });
 
-// # %%
-// @tool("square_root")
-// def tool1(x: float) -> float:
-//     """Calculate the square root of a number"""
-//     return x ** 0.5
+// ADDING TO AGENTS
 
-// # %%
-// @tool("square_root", description="Calculate the square root of a number")
-// def tool1(x: float) -> float:
-//     return x ** 0.5
+const systemPrompt = "You are an arithmetic wizard. Use your tools to calculate the square root and square of any number.";
 
-// # %%
-// tool1.invoke({"x": 467})
+const agent = createAgent({
+  model: "gpt-5-nano",
+  tools: [squareRoot],
+  systemPrompt,
+});
 
-// # %% [markdown]
-// # ## Adding to agents
+const question = new HumanMessage("What is the square root of 467?");
+const response = await agent.invoke({
+  messages: [question]
+});
 
-// # %%
-// from langchain.agents import create_agent
+console.log(response.messages[response.messages.length - 1].content);
+console.log(response.messages);
+console.log(response.messages[1].tool_calls);
 
-// agent = create_agent(
-//     model="gpt-5-nano",
-//     tools=[tool1],
-//     system_prompt="You are an arithmetic wizard. Use your tools to calculate the square root and square of any number."
-// )
-
-// # %%
-// from langchain.messages import HumanMessage
-
-// question = HumanMessage(content="What is the square root of 467?")
-
-// response = agent.invoke(
-//     {"messages": [question]}
-// )
-
-// print(response['messages'][-1].content)
-
-// # %%
-// from pprint import pprint
-
-// pprint(response['messages'])
-
-// # %%
-// print(response["messages"][1].tool_calls)
-
-// # %%
 
 
 

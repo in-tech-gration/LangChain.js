@@ -1,4 +1,4 @@
-// Based on: https://github.com/langchain-ai/lca-lc-foundations/blob/main/notebooks/module-1/1.2_tools.ipynb
+// Based on: https://github.com/langchain-ai/lca-lc-foundations/blob/main/notebooks/module-1/1.1_prompting.ipynb
 
 // BASIC PROMPTING
 
