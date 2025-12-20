@@ -26,7 +26,7 @@ Converted to TypeScript...
   - [x] 1.2 Tools
   - [x] 1.2 Web Search
   - [x] 1.3 Short-Term Memory
-  - [ ] 1.4 Multi-modal Messages
+  - [x] 1.4 Multi-modal Messages
   - [ ] 1.5 Project: Personal Chef
 
 ## Module 2: Advanced Agent
