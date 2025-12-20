@@ -1,3 +1,4 @@
+// Based on: https://github.com/langchain-ai/lca-lc-foundations/blob/main/notebooks/module-1/1.5_personal_chef.ipynb
 import "dotenv/config.js";
 import { createAgent, HumanMessage } from "langchain";
 import { MemorySaver } from "@langchain/langgraph";
