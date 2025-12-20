@@ -68,3 +68,39 @@ response = await agent.invoke({
   messages: [message]
 })
 console.log(response.messages[1].content);
+
+// AUDIO INPUT
+
+const audioBuffer = fs.readFileSync(path.join(__dirname, './1941_Roosevelt_speech_pearlharbor_p2.mp3'));
+const base64Audio = audioBuffer.toString("base64");  // Raw base64 data
+
+agent = createAgent({
+  model: "gpt-4o-audio-preview",
+});
+
+// From base64 data
+message = new HumanMessage({
+  content: [
+    { type: "text", text: "Describe the content of this audio file." },
+    {
+      type: "audio",
+      mime_type: "audio/mp3",
+      source_type: "base64",
+      data: base64Audio,
+    },
+  ],
+});
+
+response = await agent.invoke({
+  messages: [message]
+})
+console.log(response.messages[1].content);
+
+// RECORDING
+
+// WRITE WAV TO AN IN-MEMORY BUFFER
+
+// multimodal_question = HumanMessage(content=[
+//     {"type": "text", "text": "Tell me about this audio file"},
+//     {"type": "audio", "base64": aud_b64, "mime_type": "audio/wav"}
+// ])
