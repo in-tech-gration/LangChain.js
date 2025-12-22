@@ -4,7 +4,9 @@
 
 Based on [Foundation: Introduction to LangChain - Python](https://academy.langchain.com/courses/take/foundation-introduction-to-langchain-python/)
 
-Converted to TypeScript...
+![](./assets/langchain.academy.jpg)
+
+**Converted to TypeScript...**
 
 ## Installation
 

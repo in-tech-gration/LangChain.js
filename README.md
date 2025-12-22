@@ -12,3 +12,4 @@ LangChain for JavaScript (the framework is also available for Python)
 ## Contents
 
 - [Tool Calling](./tool-calling/README.md)
+- [Foundation: Introduction to LangChain](./Introduction%20to%20LangChain/README.md)
