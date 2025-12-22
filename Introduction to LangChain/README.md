@@ -23,21 +23,22 @@ Based on [Foundation: Introduction to LangChain - Python](https://academy.langch
 
   > "Within 30 minutes you'll be building a personal Chef that suggests recipes based on pictures of your fridge."
 
-  - [x] 1.1 Foundational models
-  - [x] 1.1 Prompting
-  - [x] 1.2 Tools
-  - [x] 1.2 Web Search
-  - [x] 1.3 Short-Term Memory
-  - [x] 1.4 Multi-modal Messages
-  - [x] 1.5 Project: Personal Chef
+  - [x] [1.1 Foundational models](./Module-1/1.1_foundational_models.js)
+  - [x] [1.1 Prompting](./Module-1/1.1_prompting.js)
+  - [x] [1.2 Tools](./Module-1/1.2_tools.js)
+  - [x] [1.2 Web Search](./Module-1/1.2_web_search.js)
+  - [x] [1.3 Short-Term Memory](./Module-1/1.3_memory.js)
+  - [x] [1.4 Multi-modal Messages](./Module-1/1.4_multimodal_messages.js)
+  - [x] [1.5 Project: Personal Chef](./Module-1/1.5_personal_chef.js)
 
 ## Module 2: Advanced Agent
 
   > "MCP, customized memory, multi-agent systems. Build an entire team of synchronized wedding planners using up-to-date fly prices and venue details."
 
   - [ ] Model Context Protocol (MCP)
-  - [x] Context and State
-  - [x] Multi-Agent Systems
+  - [x] [Context](./Module-2/2.2_runtime_context.js)
+  - [x] [State](./Module-2/2.2_state.js)
+  - [x] [Multi-Agent Systems](./Module-2/2.3_multi_agent.js)
   - [ ] Project: Wedding Planner
 
 ## Module 3: Production-Ready Agent
