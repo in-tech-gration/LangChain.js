@@ -37,7 +37,7 @@ Based on [Foundation: Introduction to LangChain - Python](https://academy.langch
 
   - [ ] Model Context Protocol (MCP)
   - [x] Context and State
-  - [ ] Multi-Agent Systems
+  - [x] Multi-Agent Systems
   - [ ] Project: Wedding Planner
 
 ## Module 3: Production-Ready Agent
