@@ -34,7 +34,7 @@ Converted to TypeScript...
   > "MCP, customized memory, multi-agent systems. Build an entire team of synchronized wedding planners using up-to-date fly prices and venue details."
 
   - [ ] Model Context Protocol (MCP)
-  - [ ] Context and State
+  - [x] Context and State
   - [ ] Multi-Agent Systems
   - [ ] Project: Wedding Planner
 

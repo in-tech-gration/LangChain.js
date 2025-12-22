@@ -17,7 +17,7 @@ const question = new HumanMessage("What's the capital of the moon?");
 let response = await agent.invoke({
   messages: [question]
 }) 
-console.log(response.messages[1].content);
+console.log(response.messages[response.messages.length - 1].content);
 // There’s no capital. The Moon isn’t a country and has no government, so it has no official capital.
 
 let systemPrompt = "You are a science fiction writer, create a capital city at the users request."
