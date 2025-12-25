@@ -48,7 +48,7 @@ response = await agent.invoke({
 console.log(response.messages[1].content);
 // This image shows a quiet Parisian street framed by classic Haussmann-era buildings. The cream stone façades have ornate wrought-iron balconies, tall arched windows, and mansard roofs. In the distance, the Eiffel Tower rises between the surrounding rooftops, with another clock-tower building and more slate-roofed structures nearby. The street is tree-lined and the sky is overcast, giving the scene a calm, nostalgic mood.
 
-const imageBuffer = fs.readFileSync(path.join(__dirname, './pexels-elina-sazonova-1850619.jpg'));
+const imageBuffer = fs.readFileSync(path.join(__dirname, 'pexels-elina-sazonova-1850619.jpg'));
 const base64Image = imageBuffer.toString("base64");  // Raw base64 data
 
 // From base64 data
@@ -71,7 +71,7 @@ console.log(response.messages[1].content);
 
 // AUDIO INPUT
 
-const audioBuffer = fs.readFileSync(path.join(__dirname, './1941_Roosevelt_speech_pearlharbor_p2.mp3'));
+const audioBuffer = fs.readFileSync(path.join(__dirname, '1941_Roosevelt_speech_pearlharbor_p2.mp3'));
 const base64Audio = audioBuffer.toString("base64");  // Raw base64 data
 
 agent = createAgent({
