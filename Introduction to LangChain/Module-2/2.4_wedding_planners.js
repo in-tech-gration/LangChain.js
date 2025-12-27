@@ -13,6 +13,8 @@ const __dirname = import.meta.dirname;
 // npm install sqlite3 typeorm
 import { displayAgentMessages } from "../utils.js";
 
+// process.env.LANGCHAIN_VERBOSE = "true";
+
 // SETUP TOOLS
 
 const client = new MultiServerMCPClient({
@@ -141,7 +143,7 @@ const travelAgent = createAgent({
   model: "gpt-5-nano",
   tools,
   systemPrompt: travelAgentSystemPrompt,
-  name: "Travel Agent",
+  name: "TravelAgent",
 });
 
 
@@ -160,7 +162,7 @@ const venueAgent = createAgent({
   model: "gpt-5-nano",
   tools: [new TavilySearch({ maxResults: 1 })],
   systemPrompt: venueAgentSystemPrompt,
-  name: "Venue Agent",
+  name: "VenueAgent",
 });
 
 // PLAYLIST AGENT
@@ -177,7 +179,7 @@ const playlistAgent = createAgent({
   model: "gpt-5-nano",
   tools: [queryPlaylistDB],
   systemPrompt: playlistAgentSystemPrompt,
-  name: "Playlist Agent",
+  name: "PlaylistAgent",
 });
 
 // MAIN COORDINATOR
@@ -194,7 +196,7 @@ const searchFlights = tool(
       messages: [new HumanMessage(message)],
     });
     const lastResponse = response.messages[response.messages.length - 1].content;
-    console.log({ lastResponse });
+    // console.log({ lastResponse });
     return lastResponse;
   },
   {
@@ -216,7 +218,7 @@ const searchVenues = tool(
       messages: [new HumanMessage(query)],
     });
     const lastResponse = response.messages[response.messages.length - 1].content;
-    console.log({ lastResponse });
+    // console.log({ lastResponse });
     return lastResponse;
   },
   {
@@ -237,7 +239,7 @@ const suggestPlaylist = tool(
       messages: [new HumanMessage(query)],
     });
     const lastResponse = response.messages[response.messages.length - 1].content;
-    console.log({ lastResponse });
+    // console.log({ lastResponse });
     return lastResponse;
   },
   {
@@ -254,7 +256,7 @@ const updateState = tool(
       origin, destination, guestCount, genre
     });
 
-    return new Command({
+    const command = new Command({
       update: {
         origin,
         destination,
@@ -266,6 +268,9 @@ const updateState = tool(
         })]
       }
     });
+
+    return command;
+
   },
   {
     name: "update_state",
@@ -288,9 +293,9 @@ const coordinatorSystemPrompt = `
 const coordinator = createAgent({
   model: "gpt-5-nano",
   tools: [searchFlights, searchVenues, suggestPlaylist, updateState],
-  systemPrompt: coordinatorSystemPrompt,
+  systemPrompt: coordinatorSystemPrompt.trim(),
   stateSchema: WeddingState,
-  name: "Coordinator Agent",
+  name: "CoordinatorAgent",
 });
 
 // TEST
