@@ -41,7 +41,7 @@ Based on [Foundation: Introduction to LangChain - Python](https://academy.langch
   - [x] [Multi-Agent Systems](./Module-2/2.3_multi_agent.js)
   - [x] Project: Wedding Planner
   - [x] Bonus: RAG
-  - [ ] Bonus: SQL
+  - [x] Bonus: SQL
 
 ## Module 3: Production-Ready Agent
 
