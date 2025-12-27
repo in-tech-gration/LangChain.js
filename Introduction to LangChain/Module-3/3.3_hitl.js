@@ -3,6 +3,22 @@ import "dotenv/config.js";
 import { tool, createAgent, HumanMessage, humanInTheLoopMiddleware } from "langchain";
 import { Command, MemorySaver } from "@langchain/langgraph";
 import * as z from "zod";
+// Source - https://stackoverflow.com/a/50890409
+// Posted by mpen, modified by community. See post 'Timeline' for change history
+// Retrieved 2025-12-27, License - CC BY-SA 4.0
+import readline from "node:readline";
+
+function askQuestion(query) {
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+
+  return new Promise(resolve => rl.question(query, answer => {
+    rl.close();
+    resolve(answer);
+  }))
+}
 
 const readEmail = tool(
   async (_, config) => {
@@ -71,69 +87,80 @@ console.log(response.__interrupt__);
 console.log(response.__interrupt__[0].value.actionRequests[0].args.body);
 
 // Choose one of the 3 available responses (approve, reject, edit) and comment the other 2 in order to test:
+const answer = await askQuestion("Approve, Edit or Reject? [A,E,R]");
 
 // APPROVE ✅
+if (answer === "A") {
 
-const response2 = await agent.invoke(
-  new Command({
-    resume: {
-      decisions: [{ type: "approve" }]
-    }
-  }),
-  config
-)
+  const response = await agent.invoke(
+    new Command({
+      resume: {
+        decisions: [{ type: "approve" }]
+      }
+    }),
+    config
+  )
 
-console.log(response2);
+  // console.log(response);
+  console.log(response.messages[response.messages.length-1].content);
 
+}
 
 // REJECT ❌
+if (answer === "R") {
 
-const response3 = await agent.invoke(
+  const response = await agent.invoke(
     new Command({
-        // Decisions are provided as a list, one per action under review.
-        // The order of decisions must match the order of actions
-        // listed in the `__interrupt__` request.
-        resume: {
-            decisions: [
-                {
-                    type: "reject",
-                    // An explanation about why the action was rejected
-                    message: "No please sign off - Your merciful leader, Seán.",
-                }
-            ]
-        }
+      // Decisions are provided as a list, one per action under review.
+      // The order of decisions must match the order of actions
+      // listed in the `__interrupt__` request.
+      resume: {
+        decisions: [
+          {
+            type: "reject",
+            // An explanation about why the action was rejected
+            message: "No please sign off - Your merciful leader, Seán.",
+          }
+        ]
+      }
     }),
     config  // Same thread ID to resume the paused conversation
-);
+  );
 
-console.log(response3);
-console.log(response3.__interrupt__[0].value.actionRequests[0].args.body);
+  // console.log(response);
+  console.log(response.messages[response.messages.length-1].content);
+  console.log(response.__interrupt__[0].value.actionRequests[0].args.body);
 
+}
 
 // EDIT ✏️ 
+if (answer === "E") {
 
-const response4 = await agent.invoke(
+  const response = await agent.invoke(
     new Command({
-        // Decisions are provided as a list, one per action under review.
-        // The order of decisions must match the order of actions
-        // listed in the `__interrupt__` request.
-        resume: {
-            decisions: [
-                {
-                    type: "edit",
-                    // Edited action with tool name and args
-                    editedAction: {
-                        // Tool name to call.
-                        // Will usually be the same as the original action.
-                        name: "send_email",
-                        // Arguments to pass to the tool.
-                        args: { body: "This is the last straw, you're fired!"  },
-                    }
-                }
-            ]
-        }
+      // Decisions are provided as a list, one per action under review.
+      // The order of decisions must match the order of actions
+      // listed in the `__interrupt__` request.
+      resume: {
+        decisions: [
+          {
+            type: "edit",
+            // Edited action with tool name and args
+            editedAction: {
+              // Tool name to call.
+              // Will usually be the same as the original action.
+              name: "send_email",
+              // Arguments to pass to the tool.
+              args: { body: "This is the last straw, you're fired!" },
+            }
+          }
+        ]
+      }
     }),
     config  // Same thread ID to resume the paused conversation
-);
+  );
 
-console.log(response4);
+  // console.log(response);
+  console.log(response.messages[response.messages.length-1].content);
+
+}
