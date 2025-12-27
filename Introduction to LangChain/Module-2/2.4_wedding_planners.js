@@ -96,6 +96,9 @@ const executeSql = tool(
 
 const queryPlaylistDB = tool(
   async ({ query }) => {
+
+    // console.log("queryPlaylistDB::query", query);
+    
     const q = sanitizeSqlQuery(query);
     try {
       const db = await getDb();
