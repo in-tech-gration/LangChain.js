@@ -145,7 +145,7 @@ const travelAgentSystemPrompt = `
 const travelAgent = createAgent({
   model: "gpt-5-nano",
   tools,
-  systemPrompt: travelAgentSystemPrompt,
+  systemPrompt: travelAgentSystemPrompt.trim(),
   name: "TravelAgent",
 });
 
@@ -164,7 +164,7 @@ const venueAgentSystemPrompt = `
 const venueAgent = createAgent({
   model: "gpt-5-nano",
   tools: [new TavilySearch({ maxResults: 1 })],
-  systemPrompt: venueAgentSystemPrompt,
+  systemPrompt: venueAgentSystemPrompt.trim(),
   name: "VenueAgent",
 });
 
@@ -181,7 +181,7 @@ const playlistAgentSystemPrompt = `
 const playlistAgent = createAgent({
   model: "gpt-5-nano",
   tools: [queryPlaylistDB],
-  systemPrompt: playlistAgentSystemPrompt,
+  systemPrompt: playlistAgentSystemPrompt.trim(),
   name: "PlaylistAgent",
 });
 
@@ -207,7 +207,7 @@ const searchFlights = tool(
     description: "Travel agent searches for flights to the desired destination wedding location.",
     schema: z.object({}),
   }
-)
+);
 
 const searchVenues = tool(
   async (_, config) => {
@@ -312,9 +312,9 @@ async function init() {
     ],
   })
 
-  console.log(response);
-  displayAgentMessages(response.messages);
-  // console.log(response.messages[response.messages.length - 1].content);
+  // console.log(response);
+  // displayAgentMessages(response.messages);
+  console.log(response.messages[response.messages.length - 1].content);
 
 }
 
