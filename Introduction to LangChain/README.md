@@ -47,7 +47,7 @@ Based on [Foundation: Introduction to LangChain - Python](https://academy.langch
 
   - [ ] What is Middleware?
   - [x] Managing Long Conversations
-  - [ ] Human In The Loop (HITL)
+  - [x] Human In The Loop (HITL)
   - [ ] Dynamic Agents
   - [ ] Project: Email Assistant
   - [ ] Bonus: Agent Chat UI
