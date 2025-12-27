@@ -39,11 +39,6 @@ async function getDb() {
   return db;
 }
 
-async function getSchema() {
-  const db = await getDb();
-  return await db.getTableInfo();
-}
-
 // https://docs.langchain.com/oss/javascript/langchain/sql-agent#4-execute-sql-queries
 const DENY_RE = /\b(INSERT|UPDATE|DELETE|ALTER|DROP|CREATE|REPLACE|TRUNCATE)\b/i;
 const HAS_LIMIT_TAIL_RE = /\blimit\b\s+\d+(\s*,\s*\d+)?\s*;?\s*$/i;
@@ -73,27 +68,6 @@ function sanitizeSqlQuery(q) {
   return query;
 }
 
-const executeSql = tool(
-  async ({ query }) => {
-    const q = sanitizeSqlQuery(query);
-    try {
-      const result = await db.run(q);
-      return typeof result === "string" ? result : JSON.stringify(result, null, 2);
-    } catch (e) {
-      throw new Error(e?.message ?? String(e))
-    }
-  },
-  {
-    name: "execute_sql",
-    description: "Execute a READ-ONLY SQLite SELECT query and return results.",
-    schema: z.object({
-      query: z.string().describe("SQLite SELECT query to execute (read-only)."),
-    }),
-  }
-);
-
-// console.log( await getSchema() );
-
 const queryPlaylistDB = tool(
   async ({ query }) => {
 
@@ -102,6 +76,7 @@ const queryPlaylistDB = tool(
     const q = sanitizeSqlQuery(query);
     try {
       const db = await getDb();
+      // await db.getTableInfo();
       const result = await db.run(q);
       return typeof result === "string" ? result : JSON.stringify(result, null, 2);
     } catch (e) {
