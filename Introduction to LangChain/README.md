@@ -39,7 +39,7 @@ Based on [Foundation: Introduction to LangChain - Python](https://academy.langch
   - [x] [Context](./Module-2/2.2_runtime_context.js)
   - [x] [State](./Module-2/2.2_state.js)
   - [x] [Multi-Agent Systems](./Module-2/2.3_multi_agent.js)
-  - [ ] Project: Wedding Planner
+  - [x] Project: Wedding Planner
 
 ## Module 3: Production-Ready Agent
 
