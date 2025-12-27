@@ -46,7 +46,7 @@ Based on [Foundation: Introduction to LangChain - Python](https://academy.langch
 ## Module 3: Production-Ready Agent
 
   - [ ] What is Middleware?
-  - [ ] Managing Long Conversations
+  - [x] Managing Long Conversations
   - [ ] Human In The Loop (HITL)
   - [ ] Dynamic Agents
   - [ ] Project: Email Assistant
