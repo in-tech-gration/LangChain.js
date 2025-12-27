@@ -70,6 +70,7 @@ console.log(response.__interrupt__);
 // ACCESS JUST THE 'BODY' ARGUMENT FROM THE TOOL CALL
 console.log(response.__interrupt__[0].value.actionRequests[0].args.body);
 
+// Choose one of the 3 available responses (approve, reject, edit) and comment the other 2 in order to test:
 
 // APPROVE ✅
 
