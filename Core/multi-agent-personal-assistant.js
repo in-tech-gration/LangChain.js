@@ -1,7 +1,10 @@
 // Based on: https://docs.langchain.com/oss/javascript/langchain/multi-agent/subagents-personal-assistant
 
 // Multi-Agent Architecture: Supervisor Pattern: 
+
 // A central supervisor agent coordinates specialized worker agents. This approach excels when tasks require different types of expertise. Rather than building one agent that manages tool selection across domains, you create focused specialists coordinated by a supervisor who understands the overall workflow.
+
+// Your system has three layers. The bottom layer contains rigid API tools that require exact formats. The middle layer contains sub-agents that accept natural language, translate it to structured API calls, and return natural language confirmations. The top layer contains the supervisor that routes to high-level capabilities and synthesizes results.
 
 import "dotenv/config.js";
 import { ChatOpenAI } from "@langchain/openai";
@@ -176,6 +179,111 @@ const emailQuery = "Send the design team a reminder about reviewing the new mock
 
 // const stream = await emailAgent.stream({
 //   messages: [{ role: "user", content: emailQuery }]
+// });
+
+// for await (const step of stream) {
+//   for (const update of Object.values(step)) {
+//     if (update && typeof update === "object" && "messages" in update) {
+//       for (const message of update.messages) {
+//         console.log(message.toFormattedString());
+//       }
+//     }
+//   }
+// }
+
+// 3. WRAP SUB-AGENTS AS TOOLS
+
+// The tool descriptions help the supervisor decide when to use each tool, so make them clear and specific.
+
+const scheduleEvent = tool(
+  async ({ request }) => {
+    const result = await calendarAgent.invoke({
+      messages: [{ role: "user", content: request }]
+    });
+    const lastMessage = result.messages[result.messages.length - 1];
+    return lastMessage.text;
+  },
+  {
+    name: "schedule_event",
+    description: `
+Schedule calendar events using natural language.
+
+Use this when the user wants to create, modify, or check calendar appointments.
+Handles date/time parsing, availability checking, and event creation.
+
+Input: Natural language scheduling request (e.g., 'meeting with design team next Tuesday at 2pm')
+    `.trim(),
+    schema: z.object({
+      request: z.string().describe("Natural language scheduling request"),
+    }),
+  }
+);
+
+const manageEmail = tool(
+  async ({ request }) => {
+    const result = await emailAgent.invoke({
+      messages: [{ role: "user", content: request }]
+    });
+    const lastMessage = result.messages[result.messages.length - 1];
+    return lastMessage.text;
+  },
+  {
+    name: "manage_email",
+    description: `
+Send emails using natural language.
+
+Use this when the user wants to send notifications, reminders, or any email communication.
+Handles recipient extraction, subject generation, and email composition.
+
+Input: Natural language email request (e.g., 'send them a reminder about the meeting')
+    `.trim(),
+    schema: z.object({
+      request: z.string().describe("Natural language email request"),
+    }),
+  }
+);
+
+// 4. CREATE THE SUPERVISOR AGENT
+
+const SUPERVISOR_PROMPT = `
+You are a helpful personal assistant.
+You can schedule calendar events and send emails.
+Break down user requests into appropriate tool calls and coordinate the results.
+When a request involves multiple actions, use multiple tools in sequence.
+`.trim();
+
+const supervisorAgent = createAgent({
+  model,
+  tools: [scheduleEvent, manageEmail],
+  systemPrompt: SUPERVISOR_PROMPT,
+});
+
+// 5. USE THE SUPERVISOR
+
+// Example 1: Simple single-domain request
+const example1 = "Schedule a team standup for tomorrow at 9am";
+
+// const stream = await supervisorAgent.stream({
+//   messages: [{ role: "user", content: example1 }]
+// });
+
+// for await (const step of stream) {
+//   for (const update of Object.values(step)) {
+//     if (update && typeof update === "object" && "messages" in update) {
+//       for (const message of update.messages) {
+//         console.log(message.toFormattedString());
+//       }
+//     }
+//   }
+// }
+
+// Example 2: Complex multi-domain request
+const example2 =
+  "Schedule a meeting with the design team next Tuesday at 2pm for 1 hour, " +
+  "and send them an email reminder about reviewing the new mockups.";
+
+// const stream = await supervisorAgent.stream({
+//   messages: [{ role: "user", content: example2 }]
 // });
 
 // for await (const step of stream) {
