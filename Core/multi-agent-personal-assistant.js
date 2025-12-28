@@ -5,7 +5,7 @@
 
 import "dotenv/config.js";
 import { ChatOpenAI } from "@langchain/openai";
-import { tool } from "langchain";
+import { tool, createAgent, HumanMessage } from "langchain";
 import { z } from "zod";
 
 const model = new ChatOpenAI({
@@ -17,7 +17,7 @@ const model = new ChatOpenAI({
 // const response = await model.invoke("What is the capital of Egypt?");
 // console.log({ response });
 
-// 1. Define tools
+// 1. DEFINE TOOLS
 const createCalendarEvent = tool(
   async ({ title, startTime, endTime, attendees, location }) => {
     // Stub: In practice, this would call Google Calendar API, Outlook API, etc.
@@ -96,3 +96,47 @@ const getAvailableTimeSlots = tool(
 //   durationMinutes: 5
 // });
 // console.log({ availability });
+
+// 2. CREATE SPECIALIZED SUB-AGENTS
+
+// CALENDAR SUB-AGENT
+
+const CALENDAR_AGENT_PROMPT = `
+You are a calendar scheduling assistant.
+Parse natural language scheduling requests (e.g., 'next Tuesday at 2pm')
+into proper ISO datetime formats.
+Use get_available_time_slots to check availability when needed.
+Use create_calendar_event to schedule events.
+Always confirm what was scheduled in your final response.
+`.trim();
+
+const calendarAgent = createAgent({
+  model,
+  tools: [createCalendarEvent, getAvailableTimeSlots],
+  systemPrompt: CALENDAR_AGENT_PROMPT,
+});
+
+// Test: ❌
+// const event1 = await calendarAgent.invoke({
+//   messages: [
+//     new HumanMessage(
+//       "Create an event for next Friday at 20.15 and include ada@eff.org and alan@proton.me"
+//     )
+//   ]
+// });
+// console.log({ event1 });
+// "Ada and Alan are not available next Friday (June 21) at 20:15. The available time slots for that day are 09:00, 14:00, and 16:00. Would you like to schedule the event at one of these times, or try a different date?"
+
+// Test: ✅
+// const event2 = await calendarAgent.invoke({
+//   messages: [
+//     new HumanMessage(
+//       "Create an event for next Friday at 14:00 and include ada@eff.org and alan@proton.me"
+//     )
+//   ]
+// });
+// console.log({ event2 });
+// "The event \"Meeting\" has been scheduled for next Friday, June 21st, from 14:00 to 15:00. Attendees include ada@eff.org and alan@proton.me."
+
+
+// EMAIL SUB-AGENT
