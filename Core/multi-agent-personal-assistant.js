@@ -157,3 +157,33 @@ const query = "Schedule a team meeting next Tuesday at 2pm for 1 hour";
 // "The team meeting has been scheduled for next Tuesday, June 18th, from 2:00 pm to 3:00 pm. If you would like to add specific attendees or a location, please let me know!"
 
 // EMAIL SUB-AGENT
+const EMAIL_AGENT_PROMPT = `
+You are an email assistant.
+Compose professional emails based on natural language requests.
+Extract recipient information and craft appropriate subject lines and body text.
+Use send_email to send the message.
+Always confirm what was sent in your final response.
+`.trim();
+
+const emailAgent = createAgent({
+  model,
+  tools: [sendEmail],
+  systemPrompt: EMAIL_AGENT_PROMPT,
+});
+
+// Test:
+const emailQuery = "Send the design team a reminder about reviewing the new mockups";
+
+// const stream = await emailAgent.stream({
+//   messages: [{ role: "user", content: emailQuery }]
+// });
+
+// for await (const step of stream) {
+//   for (const update of Object.values(step)) {
+//     if (update && typeof update === "object" && "messages" in update) {
+//       for (const message of update.messages) {
+//         console.log(message.toFormattedString());
+//       }
+//     }
+//   }
+// }
