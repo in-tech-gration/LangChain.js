@@ -59,6 +59,7 @@ const trimMessages = createMiddleware({
       })
         .map(m => {
           // https://docs.langchain.com/oss/javascript/langgraph/add-memory#delete-messages
+          // Message responsible for deleting other messages.
           return new RemoveMessage({ id: m.id });
         })
     }
