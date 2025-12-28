@@ -8,7 +8,8 @@
 
 import "dotenv/config.js";
 import { ChatOpenAI } from "@langchain/openai";
-import { tool, createAgent, HumanMessage } from "langchain";
+import { tool, createAgent, HumanMessage, humanInTheLoopMiddleware } from "langchain";
+import { MemorySaver } from "@langchain/langgraph";
 import { z } from "zod";
 
 const model = new ChatOpenAI({
@@ -117,6 +118,12 @@ const calendarAgent = createAgent({
   model,
   tools: [createCalendarEvent, getAvailableTimeSlots],
   systemPrompt: CALENDAR_AGENT_PROMPT,
+  middleware: [
+    humanInTheLoopMiddleware({
+      interruptOn: { create_calendar_event: true },
+      descriptionPrefix: "Calendar event pending approval",
+    }),
+  ],
 });
 
 // Test: ❌
@@ -172,6 +179,12 @@ const emailAgent = createAgent({
   model,
   tools: [sendEmail],
   systemPrompt: EMAIL_AGENT_PROMPT,
+  middleware: [
+    humanInTheLoopMiddleware({
+      interruptOn: { send_email: true },
+      descriptionPrefix: "Outbound email pending approval",
+    }),
+  ],
 });
 
 // Test:
@@ -256,6 +269,7 @@ const supervisorAgent = createAgent({
   model,
   tools: [scheduleEvent, manageEmail],
   systemPrompt: SUPERVISOR_PROMPT,
+  checkpointer: new MemorySaver(),
 });
 
 // 5. USE THE SUPERVISOR
@@ -293,5 +307,40 @@ const example2 =
 //         console.log(message.toFormattedString());
 //       }
 //     }
+//   }
+// }
+
+// 6. ADD HUMAN-IN-THE-LOOP REVIEW
+
+const humanInTheLoop =
+  "Schedule a meeting with the design team next Tuesday at 2pm for 1 hour, " +
+  "and send them an email reminder about reviewing the new mockups.";
+
+const config = { configurable: { thread_id: "6" } };
+
+const interrupts = [];
+// const stream = await supervisorAgent.stream(
+//   { messages: [{ role: "user", content: humanInTheLoop }] },
+//   config
+// );
+
+// for await (const step of stream) {
+//   for (const update of Object.values(step)) {
+//     if (update && typeof update === "object" && "messages" in update) {
+//       for (const message of update.messages) {
+//         console.log(message.toFormattedString());
+//       }
+//     } else if (Array.isArray(update)) {
+//       const interrupt = update[0];
+//       interrupts.push(interrupt);
+//       console.log(`\nINTERRUPTED: ${interrupt.id}`);
+//     }
+//   }
+// }
+
+// for (const interrupt of interrupts) {
+//   for (const request of interrupt.value.actionRequests) {
+//     console.log(`INTERRUPTED: ${interrupt.id}`);
+//     console.log(`${request.description}\n`);
 //   }
 // }
