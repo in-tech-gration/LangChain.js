@@ -9,7 +9,7 @@
 import "dotenv/config.js";
 import { ChatOpenAI } from "@langchain/openai";
 import { tool, createAgent, HumanMessage, humanInTheLoopMiddleware } from "langchain";
-import { MemorySaver } from "@langchain/langgraph";
+import { MemorySaver, Command } from "@langchain/langgraph";
 import { z } from "zod";
 
 const model = new ChatOpenAI({
@@ -319,28 +319,59 @@ const humanInTheLoop =
 const config = { configurable: { thread_id: "6" } };
 
 const interrupts = [];
-// const stream = await supervisorAgent.stream(
-//   { messages: [{ role: "user", content: humanInTheLoop }] },
-//   config
-// );
+const stream = await supervisorAgent.stream(
+  { messages: [{ role: "user", content: humanInTheLoop }] },
+  config
+);
 
-// for await (const step of stream) {
-//   for (const update of Object.values(step)) {
-//     if (update && typeof update === "object" && "messages" in update) {
-//       for (const message of update.messages) {
-//         console.log(message.toFormattedString());
-//       }
-//     } else if (Array.isArray(update)) {
-//       const interrupt = update[0];
-//       interrupts.push(interrupt);
-//       console.log(`\nINTERRUPTED: ${interrupt.id}`);
-//     }
-//   }
-// }
+for await (const step of stream) {
+  for (const update of Object.values(step)) {
+    if (update && typeof update === "object" && "messages" in update) {
+      for (const message of update.messages) {
+        console.log(message.toFormattedString());
+      }
+    } else if (Array.isArray(update)) {
+      const interrupt = update[0];
+      interrupts.push(interrupt);
+      console.log(`\nINTERRUPTED: ${interrupt.id}`);
+    }
+  }
+}
 
-// for (const interrupt of interrupts) {
-//   for (const request of interrupt.value.actionRequests) {
-//     console.log(`INTERRUPTED: ${interrupt.id}`);
-//     console.log(`${request.description}\n`);
-//   }
-// }
+for (const interrupt of interrupts) {
+  for (const request of interrupt.value.actionRequests) {
+    console.log(`INTERRUPTED: ${interrupt.id}`);
+    console.log(`${request.description}\n`);
+  }
+}
+
+const resume = {};
+
+for (const interrupt of interrupts) {
+  const actionRequest = interrupt.value.actionRequests[0];
+  if (actionRequest.name === "send_email") {
+    // Edit email
+    const editedAction = { ...actionRequest };
+    editedAction.args.subject = "Mockups reminder";
+    resume[interrupt.id] = {
+      decisions: [{ type: "edit", editedAction }]
+    };
+  } else {
+    resume[interrupt.id] = { decisions: [{ type: "approve" }] };
+  }
+}
+
+const resumeStream = await supervisorAgent.stream(
+  new Command({ resume }),
+  config
+);
+
+for await (const step of resumeStream) {
+  for (const update of Object.values(step)) {
+    if (update && typeof update === "object" && "messages" in update) {
+      for (const message of update.messages) {
+        console.log(message.toFormattedString());
+      }
+    }
+  }
+}
