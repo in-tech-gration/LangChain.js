@@ -11,6 +11,9 @@ import { ChatOpenAI } from "@langchain/openai";
 import { tool, createAgent, HumanMessage, humanInTheLoopMiddleware } from "langchain";
 import { MemorySaver, Command } from "@langchain/langgraph";
 import { z } from "zod";
+// getCurrentTaskInput: A helper utility function that returns the input for the currently executing task (https://reference.langchain.com/javascript/functions/_langchain_langgraph.index.getCurrentTaskInput.html)
+import { getCurrentTaskInput } from "@langchain/langgraph";
+// import type { InternalAgentState } from "langchain";
 
 const model = new ChatOpenAI({
   model: "gpt-4.1",
@@ -209,23 +212,31 @@ const emailQuery = "Send the design team a reminder about reviewing the new mock
 // The tool descriptions help the supervisor decide when to use each tool, so make them clear and specific.
 
 const scheduleEvent = tool(
-  async ({ request }) => {
+  async ({ request }, config) => {
+    // Customize context received by sub-agent
+    // Access full thread messages from the config: InternalAgentState
+    const currentMessages = getCurrentTaskInput(config).messages;
+    const originalUserMessage = currentMessages.find(HumanMessage.isInstance);
+    // By default, sub-agents receive only the request string from the supervisor. You might want to pass additional context, such as conversation history or user preferences. This allows sub-agents to see the full conversation context, which can be useful for resolving ambiguities like “schedule it for the same time tomorrow” (referencing a previous conversation).
+
+    const prompt = `
+You are assisting with the following user inquiry:
+
+${originalUserMessage?.content || "No context available"}
+
+You are tasked with the following sub-request:
+
+${request}`.trim();
+
     const result = await calendarAgent.invoke({
-      messages: [{ role: "user", content: request }]
+      messages: [{ role: "user", content: prompt }],
     });
     const lastMessage = result.messages[result.messages.length - 1];
     return lastMessage.text;
   },
   {
     name: "schedule_event",
-    description: `
-Schedule calendar events using natural language.
-
-Use this when the user wants to create, modify, or check calendar appointments.
-Handles date/time parsing, availability checking, and event creation.
-
-Input: Natural language scheduling request (e.g., 'meeting with design team next Tuesday at 2pm')
-    `.trim(),
+    description: "Schedule calendar events using natural language.",
     schema: z.object({
       request: z.string().describe("Natural language scheduling request"),
     }),
@@ -375,3 +386,5 @@ for await (const step of resumeStream) {
     }
   }
 }
+
+// 7. ADVANCED: CONTROL INFORMATION FLOW
