@@ -6,6 +6,10 @@
 
 // Your system has three layers. The bottom layer contains rigid API tools that require exact formats. The middle layer contains sub-agents that accept natural language, translate it to structured API calls, and return natural language confirmations. The top layer contains the supervisor that routes to high-level capabilities and synthesizes results.
 
+// The supervisor pattern creates layers of abstraction where each layer has a clear responsibility. When designing a supervisor system, start with clear domain boundaries and give each sub-agent focused tools and prompts. Write clear tool descriptions for the supervisor, test each layer independently before integration, and control information flow based on your specific needs.
+
+// Use the supervisor pattern when you have multiple distinct domains (calendar, email, CRM, database), each domain has multiple tools or complex logic, you want centralized workflow control, and sub-agents don’t need to converse directly with users.
+
 import "dotenv/config.js";
 import { ChatOpenAI } from "@langchain/openai";
 import { tool, createAgent, HumanMessage, humanInTheLoopMiddleware } from "langchain";
@@ -231,8 +235,18 @@ ${request}`.trim();
     const result = await calendarAgent.invoke({
       messages: [{ role: "user", content: prompt }],
     });
+
+    // You can also customize what information flows back to the supervisor:
     const lastMessage = result.messages[result.messages.length - 1];
+    // Option 1: Return just the confirmation message
     return lastMessage.text;
+
+    // Option 2: Return structured data
+    // return JSON.stringify({
+    //   status: "success",
+    //   event_id: "evt_123",
+    //   summary: lastMessage.text
+    // });
   },
   {
     name: "schedule_event",
@@ -242,6 +256,8 @@ ${request}`.trim();
     }),
   }
 );
+
+// Important: Make sure sub-agent prompts emphasize that their final message should contain all relevant information. A common failure mode is sub-agents that perform tool calls but don’t include the results in their final response.
 
 const manageEmail = tool(
   async ({ request }) => {
@@ -387,4 +403,4 @@ for await (const step of resumeStream) {
   }
 }
 
-// 7. ADVANCED: CONTROL INFORMATION FLOW
+// Full example: https://github.com/langchain-ai/langchainjs/blob/main/examples/src/createAgent/supervisor.ts
